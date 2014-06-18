@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  BeamMeUpMQ
+  %%
+  Copyright (C) 2014 ARTE G.E.I.E
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of The MIT License (MIT) as published by the Open Source 
+  Initiative.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See The 
+  MIT License (MIT) for more details.
+  
+  You should have received a copy of The MIT License (MIT) 
+  along with this program.  If not, see <http://opensource.org/licenses/MIT>
+  #L%
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+        >
+
+
+    <description>
+        Spring WEB bean configuration file for the BeamMeUpQM project
+    </description>
+    
+    <!--BASE SPRING CONFIG -->
+    <context:component-scan base-package="tv.arte.beammeupmq.web"/>
+
+    <!--MVC CONFIG -->
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
+
+    <bean class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean" id="contentNegotiationManager">
+        <property name="defaultContentType" value="application/json"/>
+        <property name="mediaTypes">
+            <map>
+                <entry key="atom" value="application/atom+xml"/>
+                <entry key="html" value="text/html"/>
+                <entry key="json" value="application/json"/>
+                <entry key="xml" value="application/xml"/>
+            </map>
+        </property>
+
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+
+        <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+        <property name="order" value="1"/>
+        <property name="defaultViews">
+            <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+                <property name="objectMapper" ref="jacksonObjectMapper"/>
+                <property name="exposePathVariables" value="false"/>
+                <!-- 				Enable client cache -->
+                <property name="disableCaching" value="false"/>
+
+            </bean>
+        </property>
+    </bean>
+
+	<bean id="dateFormatter" class="java.text.SimpleDateFormat">
+        <description>Pattern used to format all the date fields
+        </description>
+        <constructor-arg>
+            <value>dd/MM/yyyy HH:mm:ss Z</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
+        <!-- Ignore Null Fields when serializing -->
+        <property name="serializationInclusion" value="NON_NULL"/>
+        <property name="dateFormat" ref="dateFormatter"/>
+
+    </bean>
+    
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetMethod" value="configure"/>
+        <property name="targetObject" ref="jacksonObjectMapper"/>
+        <property name="arguments">
+            <list>
+                <value type="com.fasterxml.jackson.databind.SerializationFeature">WRITE_DATES_AS_TIMESTAMPS</value>
+                <value type="java.lang.Boolean">false</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetMethod" value="configure"/>
+        <property name="targetObject" ref="jacksonObjectMapper"/>
+        <property name="arguments">
+            <list>
+                <value type="com.fasterxml.jackson.databind.DeserializationFeature">FAIL_ON_UNKNOWN_PROPERTIES</value>
+                <value type="java.lang.Boolean">false</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>
