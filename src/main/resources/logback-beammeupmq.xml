@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  BeamMeUpMQ
+  %%
+  Copyright (C) 2014 ARTE G.E.I.E
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of The MIT License (MIT) as published by the Open Source 
+  Initiative.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See The 
+  MIT License (MIT) for more details.
+  
+  You should have received a copy of The MIT License (MIT) 
+  along with this program.  If not, see <http://opensource.org/licenses/MIT>
+  #L%
+  -->
+
+<configuration scan="true">
+	<appender name="beamMeUpMQConsole" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%d{ISO8601} | %contextName | %-5level | %-40.40logger{0} | %msg | [%thread] %n</Pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>TRACE</level>
+		</filter>
+	</appender>
+
+  	<appender name="beamMeUpMQDailyRollingFileAppender" class="ch.qos.logback.classic.sift.SiftingAppender">
+	  	<discriminator class="ch.qos.logback.classic.sift.JNDIBasedContextDiscriminator">
+	    	<defaultValue>unknown</defaultValue>
+	    </discriminator>
+  		<sift>
+  			<appender name="internalBeamMeUpMQDailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	  			<File>${logback.log.dir}${logback.beatmeup.log.name}</File>
+				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<FileNamePattern>${logback.log.dir}${logback.tvguide.log.name}.%d{yyyy-MM-dd}</FileNamePattern>
+					<maxHistory>${logback.logging.history.files.number}</maxHistory>			
+				</rollingPolicy>
+		
+				<encoder>
+					<Pattern>%d{ISO8601} | %-5level | %-40.40logger{0} | %msg | [%thread] %n</Pattern>
+				</encoder> 
+  			</appender>
+  		</sift>
+  	</appender> 	
+  	 
+	<logger name="tv.arte" additivity="false">
+	    <level value="${logback.logging.level.root}" />
+	    <appender-ref ref="beamMeUpMQConsole" />
+		<appender-ref ref="beamMeUpMQDailyRollingFileAppender"/>
+	</logger>
+
+	<root>
+		<level value="${logback.logging.level.root}" />
+		<appender-ref ref="beamMeUpMQConsole" />
+		<appender-ref ref="beamMeUpMQDailyRollingFileAppender"/>
+	</root>
+</configuration>

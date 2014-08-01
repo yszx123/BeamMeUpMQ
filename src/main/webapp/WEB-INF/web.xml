@@ -1,0 +1,106 @@
+<!--
+  #%L
+  BeamMeUpMQ
+  %%
+  Copyright (C) 2014 ARTE G.E.I.E
+  %%
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of The MIT License (MIT) as published by the Open Source 
+  Initiative.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See The 
+  MIT License (MIT) for more details.
+  
+  You should have received a copy of The MIT License (MIT) 
+  along with this program.  If not, see <http://opensource.org/licenses/MIT>
+  #L%
+  -->
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	metadata-complete="true">
+
+	<display-name>BeamMeUpMQ REST Webapp</display-name>
+
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>beammeupmq</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:/META-INF/beammeupmq-applicationContext.xml
+		</param-value>
+	</context-param>
+	
+	<!-- Configuration for Logback context JNDI initialisation -->
+	<env-entry>
+		<env-entry-name>logback/context-name</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>beammeupmq</env-entry-value>
+	</env-entry>
+	
+	<!-- Explicit logback file configuration -->
+	<env-entry>
+		<env-entry-name>logback/configuration-resource</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>logback-beammeupmq.xml</env-entry-value>
+	</env-entry>
+	
+	<!-- Logback automatic logging context detaching for webapps hot deploys -->
+	<listener>
+		<listener-class>ch.qos.logback.classic.selector.servlet.ContextDetachingSCL</listener-class>
+	</listener>
+
+	<!-- Logback performance tweak filter for JNDI context lookup -->
+	<filter>
+		<filter-name>LoggerContextFilter</filter-name>
+		<filter-class>ch.qos.logback.classic.selector.servlet.LoggerContextFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>LoggerContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Spring context load listener -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- SPRING servlet configuration -->
+	<servlet>
+		<servlet-name>spring-servlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/beammeupmq-mvc-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>spring-servlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<!-- Filter to force the UTF-8 encoding in the URLs. -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+</web-app>
