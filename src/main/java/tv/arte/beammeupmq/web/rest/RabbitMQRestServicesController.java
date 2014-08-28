@@ -77,4 +77,33 @@ public class RabbitMQRestServicesController {
     	
         return response;
     }
+    
+    @RequestMapping(value = "/copy/q2q", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public BeamMeUpMQStandardResponse copyQueueToQueue(RabbitMQRequestParams rabbitMQRequestParams) {
+        
+    	BeamMeUpMQStandardResponse response = new BeamMeUpMQStandardResponse();
+    	    	
+    	try {
+    		//Apply some default values for non provided
+    		rabbitMQRequestParams.applyDefaultValues(false);
+    		
+    		//Validate parameters
+			rabbitMQRequestParams.validate(true);
+			
+			//Copy messages
+	    	try {
+				RabbitMQUtils.copyFromQueueToQueue(rabbitMQRequestParams);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				logger.debug(ExceptionUtils.getFullStackTrace(e));
+				response.setSuccess(false);
+				response.addInfoMessage(null, e.getMessage());
+			}
+		} catch (ValidationException e1) {
+			response.setSuccess(false);
+			response.setErrorMessages(new ArrayList<BeamMeUpMQError>(e1.getValidationErrorMessages()));
+		}
+    	
+        return response;
+    }
 }

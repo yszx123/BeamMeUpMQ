@@ -68,6 +68,10 @@ public class DefaultRabbitMQueueProducer extends AbstractBaseRabbitComunicationP
 	 * {@inheritDoc}
 	 */
 	public void produce(Message message) throws Exception {
-		rabbitTemplate.send(message);
+		rabbitTemplate.send(message.getMessageProperties().getReceivedRoutingKey(), message);
+	}
+
+	public void produce(Message message, String queue) throws Exception {
+		rabbitTemplate.send(queue, message);
 	}	
 }
