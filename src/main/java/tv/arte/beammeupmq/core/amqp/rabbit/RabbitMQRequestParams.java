@@ -233,9 +233,6 @@ public class RabbitMQRequestParams extends AbstractBaseRequestParams {
 		if (force || sourceRoutingKey == null) {
 			sourceRoutingKey = "#";
 		}
-		if (force || destinationRoutingKey == null) {
-			destinationRoutingKey = "#";
-		}
 		if (force || requeue == null) {
 			requeue = false;
 		}

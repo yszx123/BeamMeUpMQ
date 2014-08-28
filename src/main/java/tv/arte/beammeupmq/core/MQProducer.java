@@ -31,7 +31,19 @@ package tv.arte.beammeupmq.core;
 public interface MQProducer<T> {
 	
 	/**
-	 * Send (produces) a message to the queue 
+	 * Send (produces) a message to the exchange 
+	 * 
+	 * @param message The message to be sent
+	 * @throws Exception In case of error
 	 */
 	public void produce(T message) throws Exception;
+	
+	/**
+	 * Send (produces) a message to a queue
+	 * 
+	 * @param message The message to be sent
+	 * @param queue The destination queue
+	 * @throws Exception In case of error
+	 */
+	public void produce(T message, String queue) throws Exception;
 }

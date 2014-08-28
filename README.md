@@ -20,7 +20,8 @@ __Steps :__
 
 
 
-#### From queue to queue of a topic
+#### From a queue to a topic exchange
+This results in sending a message from a queue to an exchange and all the queues that are binded to this echange will get the message
 
 **URL:** /beammeupmq/services/rabbitmq/copy/topicq2q.json
 
@@ -48,12 +49,41 @@ destinationQueue        | X |       | The destination RabbitMQ queue name
 number                  |   |       | The number of messages to copy. I not provided all messages are copied 
 requeue                 |   | false | If `true`, the messages will be requeued 
 
+#### From a queue to a queue
+This results in sending a message from a queue to another queue.
+
+**URL:** /beammeupmq/services/rabbitmq/copy/q2q.json
+
+**HTTP Method:** POST
+
+**Parameters**
+
+Name | M | Default | Description 
+----------------------- |:---:|:-----:| ----------------------- 
+sourceHost              | X |       | The source RabbitMQ server address 
+sourcePort              | X |       | The source RabbitMQ server port 
+sourceUsername          | X |       | The source RabbitMQ server access username 
+sourcePassword          | X |       | The source RabbitMQ server access password associated to the username 
+sourceVirtualHost       | X |       | The source RabbitMQ virtual host 
+sourceQueue             | X |       | The source RabbitMQ queue name 
+destinationHost         | X |       | The destination RabbitMQ server address 
+destinationPort         | X |       | The destination RabbitMQ server port 
+destinationUsername     | X |       | The destination RabbitMQ server access username 
+destinationPassword     | X |       | The destination RabbitMQ server access password associated to the username 
+destinationVirtualHost  | X |       | The destination RabbitMQ virtual host 
+destinationQueue        | X |       | The destination RabbitMQ queue name 
+number                  |   |       | The number of messages to copy. I not provided all messages are copied 
+requeue                 |   | false | If `true`, the messages will be requeued
+
 
 
 
 ## Relesases
 ### Relesase 0.1
 - Copy messages from queue to queue of a topic
+### Relesase 0.1.1
+- Bugfix : coping topic messages fails for cases while destination routing key is difefrent than `#`
+- Add the possibility to really copy from queue to queue
 
 ## Installation
 It is possible to eather download the precopiled .war file or clone the project and make and rebuild it. For the second option please refer to Development section and come back after compiling the .war file. For the first option please follow the next steps:

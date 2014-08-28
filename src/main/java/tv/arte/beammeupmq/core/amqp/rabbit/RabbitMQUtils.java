@@ -34,7 +34,7 @@ import org.springframework.amqp.core.Message;
 public class RabbitMQUtils {
 
 	/**
-	 * Copy messages form one topic queue to another
+	 * Copy messages form one topic exchange queue to another exchange
 	 * 
 	 * @param rabbitMQRequestParams Rabbit connection configuration infos passed by a request
 	 * @throws Exception
@@ -43,7 +43,7 @@ public class RabbitMQUtils {
 		RabbitMQTopicQueueConsumer consumer = new RabbitMQTopicQueueConsumer(
 				rabbitMQRequestParams.getSourceHost(), rabbitMQRequestParams.getSourcePort()
 				, rabbitMQRequestParams.getSourceUsername(), rabbitMQRequestParams.getSourcePassword()
-				, rabbitMQRequestParams.getSourceVirtualHost(), rabbitMQRequestParams.getSourceExchange(),
+				, rabbitMQRequestParams.getSourceVirtualHost(),rabbitMQRequestParams.getSourceExchange(),
 				rabbitMQRequestParams.getSourceRoutingKey(), rabbitMQRequestParams.getSourceQueue()
 		);
 		
@@ -58,6 +58,35 @@ public class RabbitMQUtils {
 		if (messages != null && ! messages.isEmpty()) {
 			for(Message message : messages) {
 				producer.produce(message);
+			}
+		}
+	}
+	
+	/**
+	 * Copy messages form one queue to another using the default exchange
+	 * 
+	 * @param rabbitMQRequestParams Rabbit connection configuration infos passed by a request
+	 * @throws Exception
+	 */
+	public static void copyFromQueueToQueue(RabbitMQRequestParams rabbitMQRequestParams) throws Exception {
+		RabbitMQTopicQueueConsumer consumer = new RabbitMQTopicQueueConsumer(
+				rabbitMQRequestParams.getSourceHost(), rabbitMQRequestParams.getSourcePort()
+				, rabbitMQRequestParams.getSourceUsername(), rabbitMQRequestParams.getSourcePassword()
+				, rabbitMQRequestParams.getSourceVirtualHost(),"",
+				"#", rabbitMQRequestParams.getSourceQueue()
+		);
+		
+		RabbitMQTopicQueueProducer producer = new RabbitMQTopicQueueProducer(
+				rabbitMQRequestParams.getDestinationHost(), rabbitMQRequestParams.getDestinationPort()
+				, rabbitMQRequestParams.getDestinationUsername(), rabbitMQRequestParams.getDestinationPassword()
+				, rabbitMQRequestParams.getDestinationVirtualHost(), ""
+				, rabbitMQRequestParams.getDestinationQueue()
+		);
+		
+		List<Message> messages = consumer.consumeMulti(rabbitMQRequestParams.getNumber(), rabbitMQRequestParams.getRequeue());
+		if (messages != null && ! messages.isEmpty()) {
+			for(Message message : messages) {
+				producer.produce(message,rabbitMQRequestParams.getDestinationQueue());
 			}
 		}
 	}
