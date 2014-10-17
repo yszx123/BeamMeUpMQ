@@ -90,17 +90,34 @@ It is possible to eather download the precopiled .war file or clone the project 
 
 - Download the .war file from [here](https://github.com/ArteGEIE/BeamMeUpMQ/blob/master/target/beammeupmq.war)
 - Deploy the file on your web server
-- (Optional) Navigate to the web application working directory of BeatMeUpMQ into your web server and find the file WEB-INF/classes/logback-beammeupmq.xml and edit it in order to provide a full path(<File> tag value) for the application private log file. It is also possible to change log levels and maximum number of historical log files
-- (Optional) Execute a simple tests betwean two queues to validate the installation
 
-### Troubleshooting
+###Configurations
+- Options to start the server JVM with
+
+Option | Description
+----- | ----
+-Dlogback.ContextSelector=JNDI | Configure logback to use the name of the Logback context provided in the web.xml file
+
+
+###Optionnal configurations
+- **Separate application logs:** Navigate to the web application working directory of BeatMeUpMQ into your web server and find the file WEB-INF/classes/logback-beammeupmq.xml and edit it in order to provide a full path(<File> tag value) for the application private log file. It is also possible to change log levels and maximum number of historical log files
+
+
+## Troubleshooting
 - The server should be authorized to establish connections to the remote RabbitMQ servers for the given ports and credentials. 
 
 
 ## Development
 
-### Maven2 build command
+### Maven2 build commands
+- Common
+
+		mvn clear install
+
+- To add licence headers to new files
+
 		mvn clear license:update-file-header install
+
 
 ## License
 The BeatMeUpMQ is under The MIT License (MIT). Here there is the project associated license information:
