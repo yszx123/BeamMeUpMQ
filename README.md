@@ -76,6 +76,7 @@ requeue                 | no  | false | If `false`, the message will be transfer
 ## Releases
 ### Release 0.1
 - Beam messages from a source queue to a destination exchange
+
 ### Release 0.1.1
 - Bugfix : Beaming messages failing when the destination routing key is different than `#`
 - Add the possibility to beam messages from one queue to another
