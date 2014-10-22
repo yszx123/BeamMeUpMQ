@@ -20,7 +20,7 @@ __Steps :__
 This method transfers messages from one source queue to a receiving exchange. 
 > Please note that all queues binded to the receiving exchange will therefore get a copy of the message
 
-**URL:** /beammeupmq/services/rabbitmq/copy/topicq2q.json
+**URL:** /beammeupmq/services/rabbitmq/beam/q2echange.json
 
 **HTTP Method:** POST
 
@@ -42,14 +42,13 @@ destinationUsername     | yes |       | The destination RabbitMQ server access u
 destinationPassword     | yes |       | The destination RabbitMQ server access password associated to the username 
 destinationVirtualHost  | yes |       | The destination RabbitMQ virtual host 
 destinationExchange     | yes |       | The destination RabbitMQ exchange name 
-destinationQueue        | yes |       | The destination RabbitMQ queue name 
 number                  | no  |       | Number of messages to handle. By default all messages are handled
 requeue                 | no  | false | If `false`, the message will be transferred from one queue to another (cut and paste)<br/>If `true`, the messages will be copied from the source to the destination (copy and paste) 
 
 #### Beam messages from one queue to another
 This method transfers messages from a source queue to a destination queue.
 
-**URL:** /beammeupmq/services/rabbitmq/copy/q2q.json
+**URL:** /beammeupmq/services/rabbitmq/beam/q2q.json
 
 **HTTP Method:** POST
 
