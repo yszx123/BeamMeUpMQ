@@ -3,6 +3,10 @@ BeamMeUpMQ
 
 RESTful API that transfers messages from one RabbitMQ queue to another queue or exchange.
 
+    Please note that some of the functionnalities provided by this webservice is now natively supported by
+    the rabbitMQ Shovel plugin : (although not available via REST)
+https://www.rabbitmq.com/shovel.html
+
 ## How it works
 
 __Steps :__
